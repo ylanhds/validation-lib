@@ -20,7 +20,17 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface EnumValue {
+    /**
+     * 指定枚举类
+     * 必须指定一个继承自Enum的类，用于校验字段值是否在枚举范围内
+     * @return 枚举类的Class对象
+     */
     Class<? extends Enum<?>> enumClass();
 
+    /**
+     * 校验失败时的错误信息
+     * 默认值为"值不在枚举定义范围内"
+     * @return 错误信息
+     */
     String message() default "值不在枚举定义范围内";
 }

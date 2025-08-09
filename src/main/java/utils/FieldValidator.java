@@ -63,6 +63,14 @@ public class FieldValidator {
                 && price.compareTo(BigDecimal.valueOf(max)) <= 0;
     }
 
+    /**
+     * 数量范围校验
+     *
+     * @param qty 数量
+     * @param min 最小值
+     * @param max 最大值
+     * @return 是否在指定范围内
+     */
     public static boolean isValidQuantity(Integer qty, int min, int max) {
         if (qty == null) {
             return false;
@@ -70,14 +78,36 @@ public class FieldValidator {
         return qty >= min && qty <= max;
     }
 
+    /**
+     * 邮政编码校验（6位数字）
+     *
+     * @param code 邮政编码
+     * @return 是否为有效的6位数字邮政编码
+     */
     public static boolean isValidPostalCode(String code) {
         return code != null && code.matches("^\\d{6}$");
     }
 
+    /**
+     * 姓名长度校验
+     *
+     * @param name      姓名
+     * @param minLength 最小长度
+     * @param maxLength 最大长度
+     * @return 是否符合长度要求
+     */
     public static boolean isValidName(String name, int minLength, int maxLength) {
         return name != null && name.length() >= minLength && name.length() <= maxLength;
     }
 
+    /**
+     * 地址长度校验
+     *
+     * @param address   地址
+     * @param minLength 最小长度
+     * @param maxLength 最大长度
+     * @return 是否符合长度要求
+     */
     public static boolean isValidAddress(String address, int minLength, int maxLength) {
         return address != null && address.length() >= minLength && address.length() <= maxLength;
     }
@@ -118,79 +148,64 @@ public class FieldValidator {
      * @return 是否符合格式和范围要求
      */
     public static boolean isValidDateTime(String dateTime, String pattern, String min, String max) {
+        // 参数校验
         if (dateTime == null || pattern == null) {
             return false;
         }
 
         try {
+            // 创建日期时间格式化器
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+            // 解析输入的日期时间
             LocalDateTime dt = parseDateTime(dateTime, pattern, formatter);
-
+            // 校验最小日期时间范围
             if (min != null && !min.isEmpty()) {
                 LocalDateTime minDt = parseDateTime(min, pattern, formatter);
                 if (dt.isBefore(minDt)) {
                     return false;
                 }
             }
-
+            // 校验最大日期时间范围
             if (max != null && !max.isEmpty()) {
                 LocalDateTime maxDt = parseDateTime(max, pattern, formatter);
                 if (dt.isAfter(maxDt)) {
                     return false;
                 }
             }
-
+            // 所有校验通过
             return true;
         } catch (Exception e) {
+            // 解析或比较过程中出现异常，返回false
             return false;
         }
     }
 
+    /**
+     * 根据模式解析日期时间字符串
+     *
+     * @param date      日期时间字符串
+     * @param pattern   日期时间格式模式
+     * @param formatter 格式化器
+     * @return 解析后的LocalDateTime对象
+     */
     private static LocalDateTime parseDateTime(String date, String pattern, DateTimeFormatter formatter) {
         // 更准确地判断是否包含时间部分
         boolean hasTime = pattern.contains("H") || pattern.contains("m") || pattern.contains("s");
 
         if (hasTime) {
+            // 包含时间部分，解析为LocalDateTime
             return LocalDateTime.parse(date, formatter);
         } else {
+            // 不包含时间部分，解析为LocalDate并转换为当天的开始时间
             return java.time.LocalDate.parse(date, formatter).atStartOfDay();
         }
     }
-//    public static boolean isValidDateTime(String dateTime, String pattern, String min, String max) {
-//        if (dateTime == null || pattern == null) {
-//            return false;
-//        }
-//        try {
-//            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
-//            LocalDateTime dt;
-//            if (pattern.contains("HH") || pattern.contains("mm")) {
-//                dt = LocalDateTime.parse(dateTime, formatter);
-//            } else {
-//                dt = java.time.LocalDate.parse(dateTime, formatter).atStartOfDay();
-//            }
-//            if (!min.isEmpty() && dt.isBefore(parseToLocalDateTime(min, pattern))) {
-//                return false;
-//            }
-//            if (!max.isEmpty() && dt.isAfter(parseToLocalDateTime(max, pattern))) {
-//                return false;
-//            }
-//            return true;
-//        } catch (Exception e) {
-//            return false;
-//        }
-//    }
-//
-//    private static LocalDateTime parseToLocalDateTime(String date, String pattern) {
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
-//        if (pattern.contains("HH") || pattern.contains("mm")) {
-//            return LocalDateTime.parse(date, formatter);
-//        } else {
-//            return java.time.LocalDate.parse(date, formatter).atStartOfDay();
-//        }
-//    }
 
     /**
      * URL格式校验
+     *
+     * @param url URL字符串
+     * @return 是否为有效的URL格式
      */
     public static boolean isValidUrl(String url) {
         return url != null && url.matches("^(https?|ftp)://[^\\s/$.?#].[^\\s]*$");
@@ -224,32 +239,16 @@ public class FieldValidator {
         if (mimeType == null) {
             return false;
         }
-
+        // 检查MIME类型是否在允许的类型列表中
         for (String type : types) {
             if (type != null && type.equalsIgnoreCase(mimeType)) {
                 return true;
             }
         }
-
+        // 未找到匹配的类型
         return false;
     }
-//    public static boolean isValidFile(byte[] content, long maxSizeKB, String[] types, String mimeType) {
-//        if (content == null) {
-//            return false;
-//        }
-//        if (content.length > maxSizeKB * 1024) {
-//            return false;
-//        }
-//        if (types != null && types.length > 0 && mimeType != null) {
-//            for (String t : types) {
-//                if (t.equalsIgnoreCase(mimeType)) {
-//                    return true;
-//                }
-//            }
-//            return false;
-//        }
-//        return true;
-//    }
+
 
     /**
      * 密码复杂度校验
@@ -313,16 +312,24 @@ public class FieldValidator {
 
     /**
      * 枚举值校验
+     *
+     * @param value     待校验的值
+     * @param enumClass 枚举类
+     * @return 是否为有效的枚举值
      */
     public static boolean isValidEnumValue(Object value, Class<? extends Enum<?>> enumClass) {
+        // 值不能为空
         if (value == null) {
             return false;
         }
+        // 遍历枚举类的所有常量
         for (Enum<?> e : enumClass.getEnumConstants()) {
+            // 比较名称是否匹配
             if (e.name().equals(value.toString())) {
                 return true;
             }
         }
+        // 未找到匹配的枚举值
         return false;
     }
 }

@@ -20,5 +20,10 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface Url {
+    /**
+     * 校验失败时的错误信息
+     * 默认值为"URL格式不正确"
+     * @return 错误信息
+     */
     String message() default "URL格式不正确";
 }

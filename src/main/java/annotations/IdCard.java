@@ -18,5 +18,10 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface IdCard {
+    /**
+     * 校验失败时的错误信息
+     * 默认值为"身份证号码格式不正确"
+     * @return 错误信息
+     */
     String message() default "身份证号码格式不正确";
 }

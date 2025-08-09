@@ -19,5 +19,10 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface PostalCode {
+    /**
+     * 校验失败时的错误信息
+     * 默认值为"邮政编码格式不正确"
+     * @return 错误信息
+     */
     String message() default "邮政编码格式不正确";
 }

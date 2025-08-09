@@ -19,7 +19,24 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface Price {
+    /**
+     * 金额最小值（单位：元）
+     * 默认值为0
+     * @return 最小金额
+     */
     double min() default 0;
+
+    /**
+     * 金额最大值（单位：元）
+     * 默认值为Double.MAX_VALUE
+     * @return 最大金额
+     */
     double max() default Double.MAX_VALUE;
+
+    /**
+     * 校验失败时的错误信息
+     * 默认值为"价格不在有效范围"
+     * @return 错误信息
+     */
     String message() default "价格不在有效范围";
 }

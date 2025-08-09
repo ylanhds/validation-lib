@@ -14,13 +14,26 @@ import java.util.List;
  * @Filename：ValidationException
  */
 public class ValidationException extends RuntimeException {
+    // 存储所有校验错误信息的列表
     private final List<String> errors;
 
+    /**
+     * 构造函数
+     *
+     * @param errors 校验错误信息列表
+     */
     public ValidationException(List<String> errors) {
+        // 调用父类构造函数，设置异常信息
         super("字段校验失败");
+        // 初始化错误信息列表
         this.errors = errors;
     }
 
+    /**
+     * 获取校验错误信息列表
+     *
+     * @return 包含所有校验错误信息的列表
+     */
     public List<String> getErrors() {
         return errors;
     }
