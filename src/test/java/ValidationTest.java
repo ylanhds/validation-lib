@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 
 public class ValidationTest {
 
-    enum Gender { MALE, FEMALE }
+    enum Gender {MALE, FEMALE}
 
     static class UserDTO {
         @Email
@@ -46,22 +46,39 @@ public class ValidationTest {
 
     public static void main(String[] args) {
         UserDTO u = new UserDTO();
-        u.email = "bad";
-        u.phone = "123";
-        u.idCard = "999";
-        u.price = new BigDecimal("-1.00");
-        u.qty = 200;
-        u.post = "abc";
-        u.name = "A";
-        u.address = "abc";
-        u.numberField = new BigDecimal("123456.789");
-        u.regDate = "2025-01-01";
-        u.createTime = "2019-01-01 23:20:14";
-        u.website = "badurl";
-        u.avatar = new FileData(new byte[20*1024], "image/jpg");
-        u.password = "12345";
-        u.gender = null;
+        //不符合校验测试
+//        u.email = "bad";
+//        u.phone = "123";
+//        u.idCard = "999";
+//        u.price = new BigDecimal("-1.00");
+//        u.qty = 200;
+//        u.post = "abc";
+//        u.name = "A";
+//        u.address = "abc";
+//        u.numberField = new BigDecimal("123456.789");
+//        u.regDate = "2019-01-01";
+//        u.website = "badurl";
+//        u.avatar = new FileData(new byte[20*1024], "image/jpg");
+//        u.password = "12345";
+//        u.gender = null;
 
+
+        //正常测试
+        u.email = "163adb@163.com";
+        u.phone = "13433334555";
+        u.idCard = "440951199503788034";
+        u.price = new BigDecimal("1.00");
+        u.qty = 80;
+        u.post = "518035";
+        u.name = "james";
+        u.address = "广东省深圳市区";
+        u.numberField = new BigDecimal("99999.89");
+        u.regDate = "2025-01-01";
+        u.createTime = "2025-01-01 23:20:14";
+        u.website = "http://www.baidu.com";
+        u.avatar = new FileData(new byte[1024], "image/png");
+        u.password = "DO27^dsfHJKEWA";
+        u.gender = Gender.FEMALE;
         try {
             ValidatorEngine.validate(u);
         } catch (ValidationException e) {
