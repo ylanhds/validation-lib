@@ -7,6 +7,7 @@
     <artifactId>validation-lib</artifactId>
     <version>1.0.0</version>
     <name>通用字段校验模块</name>
+    <packaging>jar</packaging>
 
     <dependencies>
         <!-- Java 8 以上自带 LocalDateTime 和 BigDecimal，无需额外依赖 -->
