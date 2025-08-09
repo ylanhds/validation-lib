@@ -85,15 +85,55 @@ public class UserDTO {
 }
 ```
 
-2. 调用验证引擎进行校验：
+2. 调用验证引擎进行校验：在spring中使用的方式
 
-``` java
-  try{
-      ValidatorEngine.validate(userDTO);
-      System.out.println("验证通过"); 
-  }catch(ValidationException e){
-      System.out.println("校验错误: "+e.getErrors());
-  }
+```java
+//方式1：手动调用
+@Service
+public class UserService {
+
+    public void createUser(UserDTO user) {
+        try {
+            ValidatorEngine.validate(user);
+            // 处理业务逻辑
+        } catch (ValidationException e) {
+            // 处理验证异常
+            throw new IllegalArgumentException(e.getErrors().toString());
+        }
+    }
+}
+```
+
+
+
+```java
+//方式2：通过AOP实现自动验证：
+@Aspect
+@Component
+public class ValidationAspect {
+
+    @Around("@annotation(Validated)")
+    public Object validate(ProceedingJoinPoint joinPoint) throws Throwable {
+        Object[] args = joinPoint.getArgs();
+        for (Object arg : args) {
+            if (arg != null) {
+                ValidatorEngine.validate(arg);
+            }
+        }
+        return joinPoint.proceed();
+    }
+}
+
+@RestController
+public class UserController {
+
+    @PostMapping("/users")
+    @Validated
+    public ResponseEntity<String> createUser(@RequestBody UserDTO user) {
+            // 参数会自动验证
+        return ResponseEntity.ok("User created");
+    }
+}
 ```
 
 ## 扩展性
